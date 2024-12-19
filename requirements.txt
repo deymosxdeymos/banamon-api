@@ -1,0 +1,29 @@
+# FastAPI and Server
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+python-dotenv==1.0.0
+
+# Authentication
+PyJWT==2.8.0
+passlib==1.7.4
+bcrypt==4.0.1
+google-cloud-secret-manager==2.16.4
+
+# Google Cloud
+google-cloud-storage==2.13.0
+google-cloud-firestore==2.13.1
+firebase-admin==6.2.0
+google-auth==2.23.3  # Explicitly specify for authentication
+google-cloud-secret-manager
+
+# Machine Learning
+tensorflow-cpu==2.18.0  # Use CPU-only TensorFlow for inference
+numpy==1.26.2
+Pillow==10.1.0
+tensorflow-hub==0.14.0  # Only if using TensorFlow Hub modules
+
+# Utilities
+pydantic[email]==2.5.2
+slowapi==0.1.8
+tqdm>=4.65.0

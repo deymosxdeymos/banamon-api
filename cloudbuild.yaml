@@ -1,0 +1,47 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$_PROJECT_ID/banamon-api",
+        "--cache-from",
+        "gcr.io/$_PROJECT_ID/banamon-api",
+        ".",
+      ]
+
+  # Step 2: Push the Docker image to GCR
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$_PROJECT_ID/banamon-api"]
+
+  # Step 3: Deploy to Google Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        gcloud run deploy banamon-api \
+          --image gcr.io/$_PROJECT_ID/banamon-api \
+          --region asia-southeast2 \
+          --platform managed \
+          --memory 4Gi \
+          --cpu 2 \
+          --timeout 600 \
+          --concurrency 10 \
+          --service-account banamon-dev@capstone-project-banamon.iam.gserviceaccount.com \
+          --set-env-vars MODEL_PATH=/app/model/banana_disease_model_vgg_v3.keras,IMAGES_BUCKET=banamon-images,MODEL_VERSION=1.0.0,GOOGLE_CLOUD_PROJECT=capstone-project-banamon \
+          --set-secrets=/run/secrets/jwt-secret=jwt-secret:latest \
+          --min-instances=1 \
+          --max-instances=10 \
+          --allow-unauthenticated
+
+images:
+  - "gcr.io/$_PROJECT_ID/banamon-api"
+
+substitutions:
+  _PROJECT_ID: "capstone-project-banamon"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: "E2_HIGHCPU_8"
