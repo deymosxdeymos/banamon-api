@@ -51,3 +51,7 @@ htmlcov/
 
 # Local development
 .DS_Store
+.gcloudignore
+.dockerignore
+.gitignore
+cloudbuild.yaml
